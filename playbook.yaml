@@ -1,0 +1,5 @@
+- hosts: gcp_role_www
+
+  roles:
+  - role: nginx
+    tags: [nginx]

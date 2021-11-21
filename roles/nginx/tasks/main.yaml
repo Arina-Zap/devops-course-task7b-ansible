@@ -1,0 +1,15 @@
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install nginx
+  apt: name=nginx state=latest
+
+- name: Create custom document root
+  file: path={{ doc_root }} state=directory owner=www-data group=www-data
+
+- name: Set up HTML file
+  copy: src=roles/apache/files/index.html dest={{ doc_root }}/index.html owner=www-data group=www-data mode=0644
+
+- name: Set up nginx virtual host file
+  template: src=roles/nginx/templates/vhost.tpl dest=/etc/nginx/sites-available/000-default.conf
+  notify: reload nginx
