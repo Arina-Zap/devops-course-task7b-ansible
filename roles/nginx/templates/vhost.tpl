@@ -1,9 +1,11 @@
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot {{ doc_root }}
+server {
+  listen 80;
+ root {{ doc_root }};
+ index index.html index.htm;
+ server_name {{ server_name }};
 
-    <Directory {{ doc_root }}>
-        AllowOverride All
-        Require all granted
-    </Directory>
-</VirtualHost>
+ location / {
+  default_type "text/html";
+  try_files $uri.html $uri $uri/ =404;
+ }
+}
