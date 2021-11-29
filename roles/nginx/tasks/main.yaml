@@ -5,11 +5,19 @@
   apt: name=nginx state=latest
 
 - name: Create custom document root
-  file: path={{ doc_root }} state=directory owner=www-data group=www-data
+  file: path={{ doc_root }} state=directory
 
 - name: Set up HTML file
-  copy: src=roles/apache/files/index.html dest={{ doc_root }}/index.html owner=www-data group=www-data mode=0644
+  copy: src=roles/nginx/files/index.html dest={{ doc_root }}/index.html mode=0644
 
 - name: Set up nginx virtual host file
-  template: src=roles/nginx/templates/vhost.tpl dest=/etc/nginx/sites-available/000-default.conf
+  template: src=roles/nginx/templates/vhost.tpl dest=/etc/nginx/sites-available/default
+  notify: reload nginx
+
+- name: Enable new site
+  when: not ansible_check_mode
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
   notify: reload nginx

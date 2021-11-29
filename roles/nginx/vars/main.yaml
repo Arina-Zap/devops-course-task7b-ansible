@@ -1,1 +1,2 @@
 doc_root: /var/www/example
+server_name: "{{ ansible_default_ipv4.address }}"
